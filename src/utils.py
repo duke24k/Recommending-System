@@ -57,3 +57,23 @@ def contentBoostPred(similarity, ratingMatrix, hw, sw, v):
             else:
                 prediction[userid][item] = user_mean[userid] + numerator / denominator
     return prediction
+
+# calculate SW factor, return a swMatrix
+def calculateSW(ratingMatrix):
+   nousers = np.shape(ratingMatrix)[0]
+   noitems = np.shape(ratingMatrix)[1]
+   swMatrix = np.zeros(nousers)
+   maxValue = 2
+   for item in xrange(noitems):
+       for userid in xrange(nousers):
+           if ratingMatrix[userid][item]:
+               swMatrix[userid] += 1
+   for userid in xrange(nousers):
+       if swMatrix[userid] < 50:
+           swMatrix[userid] = swMatrix[userid] * maxValue /50
+       else:
+           swMatrix[userid] = maxValue
+   for userid in xrange(nousers):
+   return swMatrix
+
+
