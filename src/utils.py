@@ -73,7 +73,7 @@ def calculateSW(ratingMatrix):
            swMatrix[userid] = swMatrix[userid] * maxValue /50
        else:
            swMatrix[userid] = maxValue
-   for userid in xrange(nousers):
+   
    return swMatrix
 
 
