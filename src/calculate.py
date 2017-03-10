@@ -3,13 +3,10 @@ import numpy as np
 import parse
 import utils
 
-def cal(ratingMatrix):
-    # similarity = sf.pearsonCosineMatrix(ratingMatrix)
 
-    nousers = np.shape(ratingMatrix)[0]
-    noitems = np.shape(ratingMatrix)[1]
 
-    # calculate mean va
+# calculate mean va
+def getVa(ratingMatrix):
     va = []
     for i in range(len(ratingMatrix)):
         sum = 0
@@ -19,7 +16,10 @@ def cal(ratingMatrix):
     np.savetxt('va.txt', va)
     print 'va done'
 
-    # calculate sgau
+# calculate sgau
+def getSgau(ratingMatrix):
+    nousers = np.shape(ratingMatrix)[0]
+    noitems = np.shape(ratingMatrix)[1]
     sgau = np.zeros((nousers, nousers))
     for i in range(nousers):
         for j in range(i + 1, nousers):
@@ -36,7 +36,10 @@ def cal(ratingMatrix):
     np.savetxt('sgau.txt', sgau)
     print 'sgau done'
 
-    # calculate mi
+# calculate mi
+def getMi(ratingMatrix):
+    nousers = np.shape(ratingMatrix)[0]
+    noitems = np.shape(ratingMatrix)[1]
     mi = []
     for i in range(nousers):
         count = 0
@@ -53,7 +56,10 @@ def cal(ratingMatrix):
     #     print mi[i]
 
 
-    # calculate hmij
+# calculate hmij
+def getHmij(ratingMatrix):
+    nousers = np.shape(ratingMatrix)[0]
+    noitems = np.shape(ratingMatrix)[1]
     hmij = np.zeros((nousers, nousers))
     for i in range(nousers):
         for j in range(nousers):
@@ -66,7 +72,10 @@ def cal(ratingMatrix):
     #     for j in range(nousers):
     #         print hmij[i][j]
 
-    # calculate hwau
+# calculate hwau
+def getHwau(ratingMatrix, hmij):
+    nousers = np.shape(ratingMatrix)[0]
+    noitems = np.shape(ratingMatrix)[1]
     hwau = np.zeros((nousers, nousers))
     for a in range(nousers):
         for u in range(nousers):
