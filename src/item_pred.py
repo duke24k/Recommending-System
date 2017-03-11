@@ -42,18 +42,20 @@ if __name__ == '__main__':
     print 'v done!'
     training, test, metadata = parse.load(1)
     ratingMatrix = constructMatrix(training, metadata)
-    # hw = cal.getHwau(v)
-    # sw = utils.calculateSW(v)
-    # # similarity = sf.cosineMatrix(v)
-    # simMat = sf.cosineMatrix(v.transpose())
-    # np.savetxt('../output/similar.txt', simMat)
-    # print 'sim done!'
-    with open('../output/hwau.txt') as f:
-        hw = np.loadtxt(f)
-    sw = utils.calculateSW(v)
-    with open('../output/siml.txt') as f:
-        simMat = np.loadtxt(f)
-    prediction = utils.contentBoostPred(simMat, ratingMatrix, hw, sw, v)
-    print 'prediction done!'
-    np.savetxt('../output/pred.txt', prediction)
-    print 'prediction done'
+    np.savetxt('../output/ratingMatrix.txt', ratingMatrix)
+    hw = cal.getHwau(ratingMatrix.transpose())
+    sw = utils.calculateSW(ratingMatrix.transpose())
+    similarity = sf.cosineMatrix(v)
+    simMat = sf.cosineMatrix(v.transpose())
+    np.savetxt('../output/similar.txt', simMat)
+    print 'sim done!'
+    # with open('../output/hwau.txt') as f:
+    #     hw = np.loadtxt(f)
+    # with open('../output/sw.txt') as f:
+    #     sw = np.loadtxt(f)
+    # with open('../output/siml.txt') as f:
+    #     simMat = np.loadtxt(f)
+    # prediction = utils.contentBoostPred(simMat, ratingMatrix, hw, sw, v)
+    # print 'prediction done!'
+    # np.savetxt('../output/pred.txt', prediction)
+    # print 'prediction done'
