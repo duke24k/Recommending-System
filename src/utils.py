@@ -35,10 +35,13 @@ def contentBoostPred(similarity, ratingMatrix, hw, sw, v):
     prediction = np.copy(rateMatrix)
     nousers = np.shape(ratingMatrix)[1]
     noitems = np.shape(ratingMatrix)[0]
-    user_mean = np.zeros((nousers))
+    user_mean = np.zeros(nousers)
     for i in xrange(nousers):
-        user_mean = np.mean(v[i, :])
-    print
+        user_mean[i] = np.mean(v[i, :])
+    diffs = np.zeros((noitems, nousers))
+    for item in xrange(noitems):
+        for user in xrange(nousers):
+            diffs[item][user] = v[user][item] - user_mean[user]
     for user in xrange(nousers):
         s = np.copy(similarity[user])
         for itemid in xrange(noitems):
@@ -47,15 +50,17 @@ def contentBoostPred(similarity, ratingMatrix, hw, sw, v):
             p = s * ratingMatrix[itemid]
             c = p / ratingMatrix[itemid]
             c[np.isnan(c)] = 0
-            tmp = np.zeros((nousers))
-            for i in xrange(nousers):
-                tmp[i] = c[i] * hw[user][i]
-            vv = np.zeros((nousers))
-            for i in xrange(nousers):
-                print np.shape(v)
-                vv[i] = tmp[i] * (v[i][itemid] - user_mean[i])
-            denominator = sw[user] + np.sum(tmp)
-            numerator = sw[user] * (v[user][itemid] - user_mean[user]) + np.sum(vv)
+            tmp = hw[user, :]
+            d = c * tmp
+            # for i in xrange(nousers):
+            #     tmp[i] = c[i] * hw[user][i]
+            diff = diffs[itemid, :]
+            vv = d * diff
+            # for i in xrange(nousers):
+            #     vv[i] = tmp[i] * diff[i]
+            denominator = sw[user] + np.sum(d)
+            # numerator = sw[user] * (v[user][itemid] - user_mean[user]) + np.sum(vv)
+            numerator = sw[user] * diffs[itemid][user] + np.sum(vv)
             if denominator == 0:
                 prediction[user][itemid] = user_mean[user]
             else:
@@ -78,4 +83,5 @@ def calculateSW(ratingMatrix):
         else:
             swMatrix[userid] = maxValue
     print 'sw done'
+    np.savetxt('../output/sw.txt', swMatrix)
     return swMatrix
