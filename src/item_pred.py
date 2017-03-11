@@ -2,6 +2,7 @@ import numpy as np
 import utils
 import parse
 import similarity_functions as sf
+import calculate as cal
 import math
 import copy
 
@@ -35,4 +36,24 @@ def itemsimMatrix():
 
 
 if __name__ == '__main__':
-    itemsimMatrix()
+    # itemsimMatrix()
+    with open('../output/virt.txt') as f:
+        v = np.loadtxt(f)
+    print 'v done!'
+    training, test, metadata = parse.load(1)
+    ratingMatrix = constructMatrix(training, metadata)
+    # hw = cal.getHwau(v)
+    # sw = utils.calculateSW(v)
+    # # similarity = sf.cosineMatrix(v)
+    # simMat = sf.cosineMatrix(v.transpose())
+    # np.savetxt('../output/similar.txt', simMat)
+    # print 'sim done!'
+    with open('../output/hwau.txt') as f:
+        hw = np.loadtxt(f)
+    sw = utils.calculateSW(v)
+    with open('../output/siml.txt') as f:
+        simMat = np.loadtxt(f)
+    prediction = utils.contentBoostPred(simMat, ratingMatrix, hw, sw, v)
+    print 'prediction done!'
+    np.savetxt('../output/pred.txt', prediction)
+    print 'prediction done'

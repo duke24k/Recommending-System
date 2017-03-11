@@ -12,7 +12,7 @@ def main(load=True, setno=0):
         ratingMatrix = utils.constructRatingMatrix(training, metadata)
         start = clock()
         # similarity = sf.pearsonMatrix(ratingMatrix)
-        similarity = sf.pearsonCosineMatrix(ratingMatrix)
+        similarity = sf.pearsonMatrix(ratingMatrix)
         end = clock()
         print 'run time: %d' % (end - start)
         np.savetxt('../output/siml/similarity%s.txt' % (setno), similarity)
