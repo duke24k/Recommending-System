@@ -16,8 +16,8 @@ def constructMatrix(data, metadata):
     return ratingMatrix
 
 
-def itemsimMatrix():
-    training, test, metadata = parse.load(1)
+def content_boosted(setno=0):
+    training, test, metadata = parse.load(setno)
     ratingMatrix = constructMatrix(training, metadata)
     simMat = sf.cosineMatrix(ratingMatrix)
     np.savetxt('../output/siml.txt', simMat)
@@ -34,28 +34,27 @@ def itemsimMatrix():
                 v[i][j] = predict[j][i]
     np.savetxt('../output/virt.txt', v)
 
-
-if __name__ == '__main__':
-    # itemsimMatrix()
-    with open('../output/virt.txt') as f:
-        v = np.loadtxt(f)
-    print 'v done!'
-    training, test, metadata = parse.load(1)
-    ratingMatrix = constructMatrix(training, metadata)
     np.savetxt('../output/ratingMatrix.txt', ratingMatrix)
     hw = cal.getHwau(ratingMatrix.transpose())
     sw = utils.calculateSW(ratingMatrix.transpose())
-    similarity = sf.cosineMatrix(v)
-    simMat = sf.cosineMatrix(v.transpose())
+    simMat = sf.cosineMatrix(ratingMatrix)
     np.savetxt('../output/similar.txt', simMat)
     print 'sim done!'
-    # with open('../output/hwau.txt') as f:
-    #     hw = np.loadtxt(f)
-    # with open('../output/sw.txt') as f:
-    #     sw = np.loadtxt(f)
-    # with open('../output/siml.txt') as f:
-    #     simMat = np.loadtxt(f)
-    # prediction = utils.contentBoostPred(simMat, ratingMatrix, hw, sw, v)
-    # print 'prediction done!'
-    # np.savetxt('../output/pred.txt', prediction)
-    # print 'prediction done'
+
+    prediction = utils.contentBoostPred(simMat, ratingMatrix, hw, sw, v)
+    np.savetxt('../output/predict.txt', prediction)
+    print 'prediction done!'
+
+    predictionOnTest = prediction[test[:, 0].astype(int) - 1, test[:, 1].astype(int) - 1]
+    error = predictionOnTest - test[:, 2]
+    return np.abs(error).mean()
+
+
+
+if __name__ == '__main__':
+    for i in xrange(1, 6):
+        file = open('../output/result.txt', 'a+')
+        mean = content_boosted(setno=i)
+        print mean
+        file.write('%s\n' % mean)
+        file.close()
