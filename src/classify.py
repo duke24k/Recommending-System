@@ -7,7 +7,8 @@ def loadFile(filename):
     fr = open(filename)
     for line in fr.readlines():
         cur = line.strip().split('|')
-        res = cur[5:]
+        # res = cur[5:]
+        res = cur[0:25]
         dataMat.append(res)
     return dataMat
 
@@ -55,29 +56,32 @@ def kMeans(dataSet, k, distMeas=distEclud, createCent=randCent):
 
 
 def run():
-    filename = '../dataset/ml-100k/u.item'
+    filename = '../dataset/input.txt'
     datas = loadFile(filename)
     row = np.shape(datas)[0]
     col = np.shape(datas)[1]
     dataMat = np.zeros((row, col))
     for i in range(row):
         for j in range(col):
-            dataMat[i][j] = datas[i][j]
+            dataMat[i][j] = float(datas[i][j])
     minC = np.inf
     minK = 0
     minClust = np.mat(np.zeros((col, 2)))
     minCenter = None
-    for k in range(1, 30):
+    for k in range(1, 9):
         centroids, clusterAssment = kMeans(dataMat, k, distEclud, randCent)
         print k
-        c = np.sum(clusterAssment[:, 1]) / row + 0.15 * k
+        c = np.sum(clusterAssment[:, 1]) / row + 0.10 * k
         print c
         if minC > c:
             minK = k
             minClust = clusterAssment
             minCenter = centroids
             minC = c
+    print "result:"
     print minK
+    for item in minClust:
+        print item
 
 
 if __name__ == '__main__':
