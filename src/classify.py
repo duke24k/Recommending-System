@@ -56,22 +56,27 @@ def kMeans(dataSet, k, distMeas=distEclud, createCent=randCent):
 
 
 def run():
-    filename = '../dataset/input.txt'
+    filename = '../dataset/source.txt'
     datas = loadFile(filename)
     row = np.shape(datas)[0]
     col = np.shape(datas)[1]
     dataMat = np.zeros((row, col))
     for i in range(row):
         for j in range(col):
-            dataMat[i][j] = float(datas[i][j])
+            if j <= 5:
+                dataMat[i][j] = float(datas[i][j]) / 10.0
+            elif 6 <= j <= 18:
+                dataMat[i][j] = float(datas[i][j])
+            else:
+                dataMat[i][j] = float(datas[i][j]) / 30.0
     minC = np.inf
     minK = 0
     minClust = np.mat(np.zeros((col, 2)))
     minCenter = None
-    for k in range(1, 9):
+    for k in range(1, 35):
         centroids, clusterAssment = kMeans(dataMat, k, distEclud, randCent)
         print k
-        c = np.sum(clusterAssment[:, 1]) / row + 0.10 * k
+        c = np.sum(clusterAssment[:, 1]) / row + 0.05 * k
         print c
         if minC > c:
             minK = k
@@ -80,10 +85,7 @@ def run():
             minC = c
     print "result:"
     print minK
-#     for item in minClust:
-#         print item
-    # clearer output
-    for i in range(0,minK):
+    for i in range(0, minK):
         print "cluster",i,":",
         index = -1
         for item in minClust:
