@@ -85,8 +85,14 @@ def run():
             minC = c
     print "result:"
     print minK
-    for item in minClust:
-        print '%d\t%f' % (item[:, 0], item[:, 1])
+    for i in range(0, minK):
+        print "cluster",i,":",
+        index = -1
+        for item in minClust:
+            index = index + 1
+            if i == item[:, 0]:
+                print index,
+        print '\n'
 
 
 if __name__ == '__main__':
