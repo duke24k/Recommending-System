@@ -18,6 +18,17 @@ def main(load=True, setno=0):
         np.savetxt('../output/siml/similarity%s.txt' % (setno), similarity)
         print "similarity done"
         prediction = utils.predictRating(similarity, ratingMatrix)
+        testUserId = 0
+        testArray = np.copy(prediction[testUserId])
+        utils.quicksort(testArray,0,testArray.size-1)
+        numOfRecommend = 3
+        topKResults = np.zeros(numOfRecommend)
+        for i in range(numOfRecommend):
+            topKResults[i] = testArray[testArray.size-1-i]
+        for index in range(testArray.size):
+            for result in topKResults:
+                if prediction[testUserId][index] == result:
+                    print index
         np.savetxt('../output/pred/prediction%s.txt' % (setno), prediction)
         print "prediction done"
     else:
